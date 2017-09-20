@@ -37,7 +37,7 @@ CLASS_LABELS =62
 DATASETS_PATH = "traffic_signs"
 train_data_dir = os.path.join(DATASETS_PATH,"datasets/BelgiumTS/Training")
 test_data_dir = os.path.join(DATASETS_PATH,"datasets/BelgiumTS/Testing")
-predict_image_dir = os.path.join(DATASETS_PATH,"1.ppm")
+predict_image_dir = os.path.join(DATASETS_PATH,"4.ppm")
 
 def load_datasets(data_dir,img_crop_size):
 		directories = [d for d in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, d))]
