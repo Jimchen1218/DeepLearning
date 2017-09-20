@@ -30,11 +30,10 @@ from PIL import Image
 print (__doc__)
 
 RAND_SEED = 42
-EPOCH_SIZE = 2500
-BATCH_SIZE = 128
+EPOCH_SIZE = 500
+BATCH_SIZE = 20
 LEARNING_RATE =0.01
 IMAGE_SIZE =32
-HIDDEN_SIZE = 256
 CLASS_LABELS = 62
 CROP_SIZE = 32
 
@@ -59,7 +58,6 @@ def load_datasets(data_dir,img_crop_size):
 
 def load_datasets_norm(data_dir,img_crop_size):
 		directories = [d for d in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, d))]
-		#print("load_datasets directories:%s"%(directories))
 		images = []
 		labels = []
 		for d in directories:
@@ -71,13 +69,10 @@ def load_datasets_norm(data_dir,img_crop_size):
 						image=color.rgb2gray(image)
 						images.append(image)
 						id = int(d)
-						#print("\nid:%s"%id)
 						label =[0]*CLASS_LABELS
 						for i in range(CLASS_LABELS):
 								if i == id:
-										#print("\ni==id i:%d,id:%d"%(i,id))
 										label[i] = 1
-						#print("\nlabel:",label)
 						labels.append(label)
 						
 		images_a = np.array(images)
@@ -121,23 +116,7 @@ def simple_fc_model(layer_name,images_ph,labels_ph,output_size):
 		tf.summary.scalar('cross_entropy', loss)
 		return train,loss,predicted_labels
 
-'''	
-cnn
-		for i in range(FLAGS.max_steps):
-			if i % BATCH_SIZE == 0:
-					summary, acc = sess.run([merged, accuracy], feed_dict={x: images_a, y_: labels_a, keep_prob: 1.0})
-					print('Accuracy at step %s: %s' % (i, acc))
-			else:
-					summary, _ = sess.run([merged, train_opt], feed_dict={x: images_a, y_: labels_a, keep_prob: 1.0})
-					
-fc					
-		for i in range(FLAGS.max_steps):
-				summary,_ ,loss_val = sess.run([merged,train,loss],feed_dict={x: images_a, y_: labels_a})
-				#_ ,loss_val = sess.run([train,loss],feed_dict={x: images_a, y_: labels_a})
-				train_writer.add_summary(summary, i)
-				if i % BATCH_SIZE == 0:
-						print("i:%d \nloss_val:%s"%(i,loss_val))					
-'''
+
 def test_random_images(images,labels,images_ph,predicted_labels,sess):
 		# Pick 10 random images
 		sample_indexes = random.sample(range(len(images)), 10)
@@ -160,7 +139,7 @@ def test_random_images(images,labels,images_ph,predicted_labels,sess):
 		    		color = 'red'
 		    plt.text(40, 10,"Truth:{0} Prediction: {1}".format(truth, prediction),fontsize=12, color=color)
 		    plt.imshow(sample_images[i])
-		#plt.show()
+		plt.show()
 
 def predict_testimages(data_dir,sess,predicted_labels,images_ph,imagesize=IMAGE_SIZE):
 		# Load the test dataset.
@@ -175,7 +154,6 @@ def predict_testimages(data_dir,sess,predicted_labels,images_ph,imagesize=IMAGE_
 		
 		print("match_count: {:.3f}".format(match_count),"test_len: {:.3f}".format(test_len))
 		print("Accuracy: {:.3f}".format(accuracy))
-		#print("time_duration: {:.5f}s".format(time_duration))
 
 def input_layer():
     x = tf.placeholder(tf.float32, [None, IMAGE_SIZE,IMAGE_SIZE,1], name="x-input")
@@ -200,26 +178,29 @@ def correct_prediction(x,y):
 		return accuracy
 
 def cnn_model(input_x,input_y,keep_prob):
-		weight1=tf.Variable(tf.truncated_normal(shape=[3,3,1,32],stddev=5e-2))
+        #1 conv+pool
+		weight1=tf.Variable(tf.truncated_normal(shape=[3,3,1,32],stddev=5e-2)) #32*32*32
 		kernel1=tf.nn.conv2d(input_x,weight1,[1,1,1,1],padding='SAME')
 		bias1=tf.Variable(tf.constant(0.0,shape=[32]))
 		conv1=tf.nn.relu(tf.nn.bias_add(kernel1,bias1))
 		pool1=tf.nn.max_pool(conv1,ksize=[1,3,3,1],strides=[1,2,2,1],padding='SAME')
 		
-		weight2=tf.Variable(tf.truncated_normal(shape=[3,3,32,64],stddev=5e-2))
+		#print "w_conv1 size:",W_conv1.eval().shape
+		#2 conv+pool
+		weight2=tf.Variable(tf.truncated_normal(shape=[3,3,32,64],stddev=5e-2)) #16*16*64
 		kernel2=tf.nn.conv2d(pool1,weight2,[1,1,1,1],padding='SAME')
 		bias2=tf.Variable(tf.constant(0.0,shape=[64]))
 		conv2=tf.nn.relu(tf.nn.bias_add(kernel2,bias2))
 		pool2=tf.nn.max_pool(conv2,ksize=[1,3,3,1],strides=[1,2,2,1],padding='SAME')
+		#3 fc
+		#key step:reshape pool2
+		pool2_flat=tf.reshape(pool2,[-1,8*8*64])
 		
-		reshape=tf.reshape(pool2,[64,-1])
-		dim=reshape.get_shape()[1].value
-		
-		weight3=tf.Variable(tf.truncated_normal(shape=[dim,192],stddev=0.04))
-		bias3=tf.Variable(tf.constant(0.1,shape=[192]))
-		local3=tf.nn.relu(tf.matmul(reshape,weight3)+bias3)
-		
-		weight4=tf.Variable(tf.truncated_normal(shape=[192,CLASS_LABELS],stddev=5e-2))
+		weight3=tf.Variable(tf.truncated_normal(shape=[8*8*64,1024],stddev=0.04)) #1024 cant be changed to 512
+		bias3=tf.Variable(tf.constant(0.1,shape=[1024]))
+		local3=tf.nn.relu(tf.matmul(pool2_flat,weight3)+bias3)
+		#4 softmax
+		weight4=tf.Variable(tf.truncated_normal(shape=[1024,CLASS_LABELS],stddev=0.04))
 		bias4=tf.Variable(tf.constant(0.1,shape=[CLASS_LABELS]))
 		y=tf.nn.softmax(tf.matmul(local3,weight4)+bias4)
 		
@@ -241,23 +222,19 @@ def main(_):
 		
 		#x,y_,keep_prob = simple_input_layer("input_layer")
 		#train,loss,predicted_labels = simple_fc_model("simple_fc_model",x,y_,CLASS_LABELS)
-		merged = tf.summary.merge_all()
-		train_writer = tf.summary.FileWriter(tempdir + '/train',sess.graph)
-		test_writer = tf.summary.FileWriter(tempdir + '/test')
-
 		tf.global_variables_initializer().run()
 		
 		for i in range(FLAGS.max_steps):
 			if i % BATCH_SIZE == 0:
-					summary, acc = sess.run([accuracy], feed_dict={x: images, y_: labels, keep_prob: 1.0})
+					acc = sess.run([accuracy], feed_dict={x: images, y_: labels, keep_prob: 0.5})
 					print('Accuracy at step %s: %s' % (i, acc))
 			else:
-					summary, _ = sess.run([train_opt], feed_dict={x: images, y_: labels, keep_prob: 1.0})
+					_ = sess.run([train_opt], feed_dict={x: images, y_: labels, keep_prob: 1.0})
 						
 		#test_random_images(images,labels,x,predicted_labels,sess)
 		#predict_testimages(test_data_dir,sess,predicted_labels,x)
 		time_duration=time.time() - time_start
-		print("total time_duration:%ss"%(time_duration))
+		print("time_duration: {:.5f}s".format(time_duration))
 		
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
