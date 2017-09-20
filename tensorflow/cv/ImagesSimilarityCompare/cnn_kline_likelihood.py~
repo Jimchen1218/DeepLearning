@@ -1,0 +1,115 @@
+'''
+name:cnn_kline_likelihood.py
+create date:8/21/2017
+modified date:9/4/2017
+author:jimchen
+'''
+
+from comparesimilarity import histcomparesimilar
+
+import tensorflow as tf
+import sys
+import os
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import numpy as np
+from PIL import Image
+import matplotlib.finance as mpf
+import math
+import glob
+import time
+import operator
+
+HIGHEST_SIMILARITY_IMAGES_NUMBER = 3
+TOTAL_NUM_IMAGES= 30
+IMAGE_RESIZE_FULLSIZE = 512
+IMAGE_RESIZE_COMPARESIZE = 32
+# changed here
+MANUAL_SELECTION_IMAGE_NUMBER= '20'
+IMGS_PLACE_DIR = "/images/"
+
+def CheckIsExist(full_path):
+	full_path=full_path.strip()
+	if(not os.path.exists(full_path)):
+		print("CheckIsExist file is not exist!")
+		return False
+	else:
+		return True
+
+def getallimgsinpath():
+    paths=[]
+    cwd=os.getcwd()
+    images_path=cwd+IMGS_PLACE_DIR
+    isExist = CheckIsExist(images_path)
+    if(not isExist):
+        return Null
+        
+    for file_name in os.listdir(images_path):
+        if file_name.endswith('png'):
+            filefullpath = os.path.join(images_path, file_name)
+            paths.append(filefullpath)
+    return paths
+
+
+#get all image files and labels from current directory
+def generatefullpath(input_num):
+	cwd=os.getcwd()
+	images_path = cwd + IMGS_PLACE_DIR
+	filefullpath = os.path.join(images_path, input_num+".png")
+	print("generatefullpath filefullpath:", filefullpath)
+	return filefullpath
+
+def gethighestsimilarityimages(highimages,i,compareimg):
+	len_images= len(highimages)
+	print("gethighestsimilarityimages compareimg:", compareimg)
+	if len_images < HIGHEST_SIMILARITY_IMAGES_NUMBER:
+		highimages.insert(i,(i,compareimg))
+		print("gethighestsimilarityimages highimages:", highimages)
+		return highimages
+
+	if compareimg > highimages[HIGHEST_SIMILARITY_IMAGES_NUMBER-1][1]:
+		print("gethighestsimilarityimages highimages:", highimages)
+		highimages.pop(-1)
+		highimages.insert(i, (i,compareimg))
+
+	highimages = sorted(highimages, key=operator.itemgetter(1), reverse=True)
+	return highimages
+
+def gethighestsimilarity3imgs(input_num):
+    similarities = []
+    filepath = []
+    high_images = []
+    filepath = getallimgsinpath()
+    if(not filepath):
+        return Null
+        
+    num = len(filepath)
+    print("num:", num)
+    select = generatefullpath(input_num)
+    print("gethighestsimilarity3imgs select:\n", select)
+
+    resize_ratio = np.power(IMAGE_RESIZE_FULLSIZE,2)/np.power(IMAGE_RESIZE_COMPARESIZE,2)
+    hcs = histcomparesimilar((IMAGE_RESIZE_FULLSIZE, IMAGE_RESIZE_FULLSIZE), (IMAGE_RESIZE_COMPARESIZE, IMAGE_RESIZE_COMPARESIZE), resize_ratio)
+
+    for i in range(num):
+        fullpath = filepath[i]
+        similarity = hcs.calcsimilar_twoimages(select, fullpath)
+        similarities.append(similarity)
+        #print("gethighestsimilarity3imgs similarities[%d]:%.8f" % (i, similarities[i]))
+
+    for i in range(num):
+        high_images = gethighestsimilarityimages(high_images, i, similarities[i])
+    print("gethighestsimilarity3imgs high_images:\n", high_images)
+    return high_images
+
+def main(_):
+    start_time=time.time()
+    gethighestsimilarity3imgs(MANUAL_SELECTION_IMAGE_NUMBER)
+    compute_time=time.time()-start_time
+    print("main compute duration time:", compute_time)
+
+if __name__ == "__main__":
+    tf.app.run(main=main, argv=[sys.argv[0]])
+    
+
+
