@@ -1,15 +1,8 @@
 '''
-name:test_traffic_signals.py
+name:test_cnn_predict.py
 create_date:9/15/2017
 author:jimchen1218@sina.com
 purpose:Traffic Sign Recognition .The goal is to build a model that can detect and classify traffic signs in a video stream taken from a moving car.
-fullconnect 
-	epochsize:500,learningrate:0.01 accuracy:8%
-	epochsize:2000,learningrate:0.01 accuracy:35.6%,34.2%,39.5%
-	epochsize:3000,10000,learningrate:0.01 accuracy:3.3%
-	epochsize:2000,learningrate:0.1 accuracy:8.9%
-	epochsize:1000,learningrate:0.01 accuracy:8.8%
-	epochsize:2500,learningrate:0.01 accuracy:52.2%
 '''
 
 import os
@@ -29,7 +22,7 @@ from PIL import Image
 
 print (__doc__)
 
-EPOCH_SIZE = 60
+EPOCH_SIZE = 3 #64
 BATCH_SIZE = 3
 LEARNING_RATE =0.001
 IMAGE_SIZE =32
@@ -76,10 +69,8 @@ def load_datasets_norm(data_dir,img_crop_size):
 						#print("\nid:%s"%id)
 						label =[0]*CLASS_LABELS
 						for i in range(CLASS_LABELS):
-								if i == id:
-										#print("\ni==id i:%d,id:%d"%(i,id))
+								if i == id:									
 										label[i] = 1
-						#print("\nlabel:",label)
 						labels.append(label)
 						
 		images_a = np.array(images)
@@ -91,33 +82,11 @@ def load_datasets_norm(data_dir,img_crop_size):
 		print("\nload_datasets_norm labels shape:", labels.shape)
 		return images, labels
 
-
-def simple_input_layer(layer_name):
-    with tf.name_scope(layer_name):
-        x = tf.placeholder(tf.float32, [None, IMAGE_SIZE,IMAGE_SIZE,1], name="x-input")
-        y_ = tf.placeholder(tf.int32, [None], name="y-input")
-        keep_prob = tf.placeholder(tf.float32)
-    return x,y_,keep_prob
-
-def simple_fc_model(layer_name,images_ph,labels_ph,output_size):
-		with tf.name_scope(layer_name):
-				images_flat = tf.contrib.layers.flatten(images_ph)
-				logits = tf.contrib.layers.fully_connected(images_flat,output_size, tf.nn.relu)
-				predicted_labels = tf.argmax(logits, 1)
-		with tf.name_scope('loss'): 
-				loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(labels=labels_ph,logits=logits))
-		with tf.name_scope('train'):
-				train = tf.train.AdamOptimizer(learning_rate=LEARNING_RATE).minimize(loss)
-		#accuracy = correct_prediction(predicted_labels,labels_ph)
-		tf.summary.scalar('cross_entropy', loss)
-		return train,loss,predicted_labels
-
-
 def display_images_and_labels(images, labels):
 		print("\ndisplay_images_and_labels labels:",labels)
 		unique_labels = set(labels)
 		print("\ndisplay_images_and_labels unique_labels:%s"%(unique_labels))
-		plt.figure(figsize=(15, 15))
+		plt.figure(figsize=(18, 18))
 		i = 1
 		for label in unique_labels:
 				image = images[labels.index(label)]
@@ -130,20 +99,26 @@ def display_images_and_labels(images, labels):
 
 def predict_testimages(data_dir,sess,predicted_labels,images_ph,imagesize=IMAGE_SIZE):
 		# Load the test dataset.
+		pred_labels =[]
 		test_images, test_labels = load_datasets(data_dir,CROP_SIZE)
 		test_images_a = np.array(test_images)
 		test_images_a = test_images_a.reshape([-1,IMAGE_SIZE,IMAGE_SIZE,1])
 		display_images_and_labels(test_images, test_labels)
-		
+'''		
 		# Run predictions against the full test set.
-		predicted = sess.run([predicted_labels],feed_dict={images_ph: test_images_a})
-		#match_count = sum([int(y == y_) for y, y_ in zip(test_labels, predicted)])
-		#test_len = len(test_labels)
-		#accuracy = match_count / test_len
+		prediction = sess.run([predicted_labels],feed_dict={images_ph: test_images_a})
+		for i in range(len(test_labels)):
+		    predicted = prediction[i]
+		    pred = np.argmax(predicted)
+		    pred_labels.append(pred)
+		match_count = sum([int(y == y_) for y, y_ in zip(test_labels, pred_labels)])
+		test_len = len(test_labels)
+		accuracy = match_count / test_len
 		
-		#print("match_count: {:.3f}".format(match_count),"test_len: {:.3f}".format(test_len))
-		#print("Accuracy: {:.3f}".format(accuracy))
-		#print("time_duration: {:.5f}s".format(time_duration))
+		print("match_count: {:.3f}".format(match_count),"test_len: {:.3f}".format(test_len))
+		print("Accuracy: {:.3f}".format(accuracy))
+		print("time_duration: {:.5f}s".format(time_duration))
+'''
 
 def input_layer():
     x = tf.placeholder(tf.float32, [None, IMAGE_SIZE,IMAGE_SIZE,1], name="x-input")
@@ -205,8 +180,8 @@ def predict_testrandomimages(data_dir,sess,predicted_labels,images_ph,imagesize=
 		sample_images_a = np.array(sample_images)
 		sample_images_a = sample_images_a.reshape([-1,IMAGE_SIZE,IMAGE_SIZE,1])
 		predicted = sess.run([predicted_labels],feed_dict={images_ph: sample_images_a})[0]
-		print(sample_labels)
-		print(predicted)
+		#print(sample_labels)
+		#print(predicted)
 		
 		# Display the predictions and the ground truth visually.
 		fig = plt.figure(figsize=(10, 10))
@@ -238,8 +213,6 @@ def main(_):
 		x,y_,keep_prob = input_layer()
 		train_opt,accuracy,predicted_labels = cnn_model(x,y_,keep_prob)
 		
-		#x,y_,keep_prob = simple_input_layer("input_layer")
-		#train,loss,predicted_labels = simple_fc_model("simple_fc_model",x,y_,CLASS_LABELS)
 		merged = tf.summary.merge_all()
 		train_writer = tf.summary.FileWriter(tempdir + '/train',sess.graph)
 		test_writer = tf.summary.FileWriter(tempdir + '/test')
@@ -249,7 +222,6 @@ def main(_):
 		for i in range(FLAGS.max_steps):
 				_,acc = sess.run([train_opt,accuracy], feed_dict={x: images, y_: labels, keep_prob: 0.8})
 				if i % BATCH_SIZE == 0:
-					#acc = sess.run([accuracy], feed_dict={x: images, y_: labels, keep_prob: 1.0})
 					print('Accuracy at step %s: %s' % (i, acc))
 		predict_testrandomimages(test_data_dir,sess,predicted_labels,x)
 		#predict_testimages(test_data_dir,sess,predicted_labels,x)
