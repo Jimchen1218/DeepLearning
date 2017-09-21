@@ -29,11 +29,11 @@ from PIL import Image
 
 print (__doc__)
 
-RAND_SEED = 42
-EPOCH_SIZE = 500
-BATCH_SIZE = 20
-LEARNING_RATE =0.01
+EPOCH_SIZE = 60
+BATCH_SIZE = 3
+LEARNING_RATE =0.001
 IMAGE_SIZE =32
+HIDDEN_SIZE = 256
 CLASS_LABELS = 62
 CROP_SIZE = 32
 
@@ -43,7 +43,7 @@ test_data_dir = os.path.join(DATASETS_PATH,"datasets/BelgiumTS/Testing")
 
 def load_datasets(data_dir,img_crop_size):
 		directories = [d for d in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, d))]
-		print("load_datasets directories:%s"%(directories))
+		#print("load_datasets directories:%s"%(directories))
 		images = []
 		labels = []
 		for d in directories:
@@ -52,12 +52,16 @@ def load_datasets(data_dir,img_crop_size):
 				for f in file_names:
 						img = skimage.data.imread(f)
 						image = skimage.transform.resize(img, (img_crop_size,img_crop_size ))
+						image=color.rgb2gray(image)
 						images.append(image)
-						labels.append(int(d))
+						id = int(d)
+						#print("\nid:%s"%id)
+						labels.append(id)
 		return images, labels
 
 def load_datasets_norm(data_dir,img_crop_size):
 		directories = [d for d in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, d))]
+		#print("load_datasets directories:%s"%(directories))
 		images = []
 		labels = []
 		for d in directories:
@@ -69,31 +73,23 @@ def load_datasets_norm(data_dir,img_crop_size):
 						image=color.rgb2gray(image)
 						images.append(image)
 						id = int(d)
+						#print("\nid:%s"%id)
 						label =[0]*CLASS_LABELS
 						for i in range(CLASS_LABELS):
 								if i == id:
+										#print("\ni==id i:%d,id:%d"%(i,id))
 										label[i] = 1
+						#print("\nlabel:",label)
 						labels.append(label)
 						
 		images_a = np.array(images)
-		print("\nload_datasets_norm images shape:", images_a.shape)
-		images = images_a.reshape([-1,IMAGE_SIZE,IMAGE_SIZE,1])				
+		images = images_a.reshape([-1,IMAGE_SIZE,IMAGE_SIZE,1])
+		
+		labels_a = np.array(labels)
+		labels = labels_a.reshape([-1,CLASS_LABELS])
+		print("\nload_datasets_norm images shape:", images.shape)
+		print("\nload_datasets_norm labels shape:", labels.shape)
 		return images, labels
-
-
-def display_images_and_labels(images, labels):
-    unique_labels = set(labels)
-    print("display_images_and_labels unique_labels:%s"%(unique_labels))
-    plt.figure(figsize=(15, 15))
-    i = 1
-    for label in unique_labels:
-        image = images[labels.index(label)]
-        plt.subplot(8, 8, i)
-        plt.axis('off')
-        plt.title("Label {0} ({1})".format(label, labels.count(label)))
-        i += 1
-        _ = plt.imshow(image)
-    #plt.show()
 
 
 def simple_input_layer(layer_name):
@@ -117,43 +113,37 @@ def simple_fc_model(layer_name,images_ph,labels_ph,output_size):
 		return train,loss,predicted_labels
 
 
-def test_random_images(images,labels,images_ph,predicted_labels,sess):
-		# Pick 10 random images
-		sample_indexes = random.sample(range(len(images)), 10)
-		sample_images = [images[i] for i in sample_indexes]
-		sample_labels = [labels[i] for i in sample_indexes]
-		predicted = sess.run([predicted_labels],feed_dict={images_ph: sample_images})[0]
-		print(sample_labels)
-		print(predicted)
-		
-		# Display the predictions and the ground truth visually.
-		fig = plt.figure(figsize=(10, 10))
-		for i in range(len(sample_images)):
-		    truth = sample_labels[i]
-		    prediction = predicted[i]
-		    plt.subplot(5, 2,1+i)
-		    plt.axis('off')
-		    if truth == prediction:
-		    		color = 'green'
-		    else:
-		    		color = 'red'
-		    plt.text(40, 10,"Truth:{0} Prediction: {1}".format(truth, prediction),fontsize=12, color=color)
-		    plt.imshow(sample_images[i])
-		plt.show()
+def display_images_and_labels(images, labels):
+		print("\ndisplay_images_and_labels labels:",labels)
+		unique_labels = set(labels)
+		print("\ndisplay_images_and_labels unique_labels:%s"%(unique_labels))
+		plt.figure(figsize=(15, 15))
+		i = 1
+		for label in unique_labels:
+				image = images[labels.index(label)]
+				plt.subplot(8, 8, i)
+				plt.axis('off')
+				plt.title("Label {0} ({1})".format(label, labels.count(label)))
+				i += 1
+				_ = plt.imshow(image)
+		#plt.show()
 
 def predict_testimages(data_dir,sess,predicted_labels,images_ph,imagesize=IMAGE_SIZE):
 		# Load the test dataset.
-		test_images, test_labels = load_datasets_norm(data_dir,CROP_SIZE)
+		test_images, test_labels = load_datasets(data_dir,CROP_SIZE)
+		test_images_a = np.array(test_images)
+		test_images_a = test_images_a.reshape([-1,IMAGE_SIZE,IMAGE_SIZE,1])
 		display_images_and_labels(test_images, test_labels)
 		
 		# Run predictions against the full test set.
-		predicted = sess.run([predicted_labels],feed_dict={images_ph: test_images})[0]
-		match_count = sum([int(y == y_) for y, y_ in zip(test_labels, predicted)])
-		test_len = len(test_labels)
-		accuracy = match_count / test_len
+		predicted = sess.run([predicted_labels],feed_dict={images_ph: test_images_a})
+		#match_count = sum([int(y == y_) for y, y_ in zip(test_labels, predicted)])
+		#test_len = len(test_labels)
+		#accuracy = match_count / test_len
 		
-		print("match_count: {:.3f}".format(match_count),"test_len: {:.3f}".format(test_len))
-		print("Accuracy: {:.3f}".format(accuracy))
+		#print("match_count: {:.3f}".format(match_count),"test_len: {:.3f}".format(test_len))
+		#print("Accuracy: {:.3f}".format(accuracy))
+		#print("time_duration: {:.5f}s".format(time_duration))
 
 def input_layer():
     x = tf.placeholder(tf.float32, [None, IMAGE_SIZE,IMAGE_SIZE,1], name="x-input")
@@ -163,7 +153,6 @@ def input_layer():
 
 
 def compute_cross_entropy(x,y):
-    #diff = tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y)
     diff = -(x * tf.log(y))
     cross_entropy = tf.reduce_mean(diff)
     return cross_entropy
@@ -178,36 +167,66 @@ def correct_prediction(x,y):
 		return accuracy
 
 def cnn_model(input_x,input_y,keep_prob):
-        #1 conv+pool
-		weight1=tf.Variable(tf.truncated_normal(shape=[3,3,1,32],stddev=5e-2)) #32*32*32
+		weight1=tf.Variable(tf.truncated_normal(shape=[3,3,1,32],stddev=5e-2))
 		kernel1=tf.nn.conv2d(input_x,weight1,[1,1,1,1],padding='SAME')
 		bias1=tf.Variable(tf.constant(0.0,shape=[32]))
 		conv1=tf.nn.relu(tf.nn.bias_add(kernel1,bias1))
-		pool1=tf.nn.max_pool(conv1,ksize=[1,3,3,1],strides=[1,2,2,1],padding='SAME')
+		pool1=tf.nn.max_pool(conv1,ksize=[1,2,2,1],strides=[1,2,2,1],padding='SAME')
 		
-		#print "w_conv1 size:",W_conv1.eval().shape
-		#2 conv+pool
-		weight2=tf.Variable(tf.truncated_normal(shape=[3,3,32,64],stddev=5e-2)) #16*16*64
+		weight2=tf.Variable(tf.truncated_normal(shape=[3,3,32,64],stddev=5e-2))
 		kernel2=tf.nn.conv2d(pool1,weight2,[1,1,1,1],padding='SAME')
 		bias2=tf.Variable(tf.constant(0.0,shape=[64]))
 		conv2=tf.nn.relu(tf.nn.bias_add(kernel2,bias2))
-		pool2=tf.nn.max_pool(conv2,ksize=[1,3,3,1],strides=[1,2,2,1],padding='SAME')
-		#3 fc
-		#key step:reshape pool2
-		pool2_flat=tf.reshape(pool2,[-1,8*8*64])
+		pool2=tf.nn.max_pool(conv2,ksize=[1,2,2,1],strides=[1,2,2,1],padding='SAME')
 		
-		weight3=tf.Variable(tf.truncated_normal(shape=[8*8*64,1024],stddev=0.04)) #1024 cant be changed to 512
+		pool2_flat = tf.reshape(pool2, [-1, 8*8*64])
+		
+		weight3=tf.Variable(tf.truncated_normal(shape=[8*8*64,1024],stddev=0.04))
 		bias3=tf.Variable(tf.constant(0.1,shape=[1024]))
 		local3=tf.nn.relu(tf.matmul(pool2_flat,weight3)+bias3)
-		#4 softmax
-		weight4=tf.Variable(tf.truncated_normal(shape=[1024,CLASS_LABELS],stddev=0.04))
+		
+		weight4=tf.Variable(tf.truncated_normal(shape=[1024,CLASS_LABELS],stddev=5e-2))
 		bias4=tf.Variable(tf.constant(0.1,shape=[CLASS_LABELS]))
 		y=tf.nn.softmax(tf.matmul(local3,weight4)+bias4)
 		
 		cross_entropy = compute_cross_entropy(input_y,y)
 		train_opt = train_optimizer(cross_entropy)
 		accuracy = correct_prediction(y,input_y)
-		return train_opt,accuracy
+		return train_opt,accuracy,y
+
+
+def predict_testrandomimages(data_dir,sess,predicted_labels,images_ph,imagesize=IMAGE_SIZE):
+		# Load the test dataset.
+		images, labels = load_datasets(data_dir,CROP_SIZE)
+		# Pick 10 random images
+		sample_indexes = random.sample(range(len(images)), 10)
+		sample_images = [images[i] for i in sample_indexes]
+		sample_labels = [labels[i] for i in sample_indexes]
+		sample_images_a = np.array(sample_images)
+		sample_images_a = sample_images_a.reshape([-1,IMAGE_SIZE,IMAGE_SIZE,1])
+		predicted = sess.run([predicted_labels],feed_dict={images_ph: sample_images_a})[0]
+		print(sample_labels)
+		print(predicted)
+		
+		# Display the predictions and the ground truth visually.
+		fig = plt.figure(figsize=(10, 10))
+		for i in range(len(sample_images)):
+		    truth = sample_labels[i]
+		    prediction = predicted[i]
+		    pred_label = np.argmax(prediction)
+		    max = np.max(prediction)
+		    print("max:%s"%(max))
+		    print("pred_label:%s"%(pred_label))
+		    print("total truth:%s \nprediction:%s \npredicted_label:%s"%(truth,prediction,pred_label))
+		    plt.subplot(5, 2,1+i)
+		    plt.axis('off')
+		    if truth == pred_label:
+		    		color = 'green'
+		    else:
+		    		color = 'red'
+		    plt.text(40, 10,"Truth:{0} Prediction: {1}".format(truth, pred_label),fontsize=12, color=color)
+		    plt.imshow(sample_images[i])
+		plt.show()
 
 def main(_):
 		sess = tf.InteractiveSession()
@@ -216,25 +235,26 @@ def main(_):
 		time_start=time.time()
 		images, labels = load_datasets_norm(train_data_dir,CROP_SIZE)
 
-
 		x,y_,keep_prob = input_layer()
-		train_opt,accuracy = cnn_model(x,y_,keep_prob)
+		train_opt,accuracy,predicted_labels = cnn_model(x,y_,keep_prob)
 		
 		#x,y_,keep_prob = simple_input_layer("input_layer")
 		#train,loss,predicted_labels = simple_fc_model("simple_fc_model",x,y_,CLASS_LABELS)
+		merged = tf.summary.merge_all()
+		train_writer = tf.summary.FileWriter(tempdir + '/train',sess.graph)
+		test_writer = tf.summary.FileWriter(tempdir + '/test')
+
 		tf.global_variables_initializer().run()
 		
 		for i in range(FLAGS.max_steps):
-			if i % BATCH_SIZE == 0:
-					acc = sess.run([accuracy], feed_dict={x: images, y_: labels, keep_prob: 0.5})
+				_,acc = sess.run([train_opt,accuracy], feed_dict={x: images, y_: labels, keep_prob: 0.8})
+				if i % BATCH_SIZE == 0:
+					#acc = sess.run([accuracy], feed_dict={x: images, y_: labels, keep_prob: 1.0})
 					print('Accuracy at step %s: %s' % (i, acc))
-			else:
-					_ = sess.run([train_opt], feed_dict={x: images, y_: labels, keep_prob: 1.0})
-						
-		#test_random_images(images,labels,x,predicted_labels,sess)
+		predict_testrandomimages(test_data_dir,sess,predicted_labels,x)
 		#predict_testimages(test_data_dir,sess,predicted_labels,x)
 		time_duration=time.time() - time_start
-		print("time_duration: {:.5f}s".format(time_duration))
+		print("total time_duration:%ss"%(time_duration))
 		
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
