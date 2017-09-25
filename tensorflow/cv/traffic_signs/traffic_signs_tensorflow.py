@@ -93,11 +93,10 @@ with graph.as_default():
     loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(labels=labels_ph,logits=logits))
     train = tf.train.AdamOptimizer(learning_rate=0.001).minimize(loss)
     init = tf.global_variables_initializer()
-    
-		print("images_flat:", images_flat)
-		print("logits:", logits)
-		print("loss:", loss)
-		print("predicted_labels:",predicted_labels)
+    print("images_flat:", images_flat)
+    print("logits:", logits)
+    print("loss:", loss)
+    print("predicted_labels:",predicted_labels)
 
 session = tf.Session(graph=graph)
 _ = session.run([init])
@@ -124,7 +123,7 @@ for i in range(len(sample_images)):
     color='green' if truth == prediction else 'red'
     plt.text(40, 10,"Truth:{0} Prediction: {1}".format(truth, prediction),fontsize=12, color=color)
     plt.imshow(sample_images[i])
-#plt.show()
+plt.show()
     
 # Load the test dataset.
 test_images, test_labels = load_datasets(test_data_dir)
