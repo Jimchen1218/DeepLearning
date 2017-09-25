@@ -2,6 +2,7 @@
 name:test_cnn_face_detect.py
 create_date:9/24/2017
 author:jimchen1218@sina.com
+test result:100% accuracy
 '''
 
 import os
@@ -28,7 +29,7 @@ IMAGE_SIZE =64
 HIDDEN_SIZE = 256
 CLASS_LABELS = 62
 
-DATASETS_PATH = "signs_oneimage"
+DATASETS_PATH = "facedetect"
 train_data_dir = os.path.join(DATASETS_PATH,"datasets/Face/Training")
 test_data_dir = os.path.join(DATASETS_PATH,"datasets/Face/Testing")
 

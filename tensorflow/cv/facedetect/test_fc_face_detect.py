@@ -17,6 +17,8 @@ import time
 print (__doc__)
 
 
+IMAGE_SIZE = 32
+
 def load_datasets(data_dir):
     directories = [d for d in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, d))]
     #print("load_datasets directories:%s"%(directories))
@@ -57,23 +59,23 @@ def display_label_images(images, label):
         plt.axis('off')
         i += 1
         plt.imshow(image)
-    #plt.show()
+    plt.show()
 
 
 #main code start here
 time_start=time.time()
 # Load training and testing datasets.
-ROOT_PATH = "signs_oneimage"
+ROOT_PATH = "facedetect"
 train_data_dir = os.path.join(ROOT_PATH,"datasets/Face/Training")
 test_data_dir = os.path.join(ROOT_PATH,"datasets/Face/Testing")
 images, labels = load_datasets(train_data_dir)
 print("number of images:%d"%(len(images)))
-display_label_images(images, 32)
+#display_label_images(images, IMAGE_SIZE)
 
 for image in images[:5]:
     print("shape: {0}, min: {1}, max: {2}".format(image.shape, image.min(), image.max()))
-    images32 = [skimage.transform.resize(image, (32, 32)) for image in images]
-    display_images_and_labels(images32, labels)
+    images32 = [skimage.transform.resize(image, (IMAGE_SIZE, IMAGE_SIZE)) for image in images]
+    #display_images_and_labels(images32, labels)
     for image in images32[:5]:
         print("shape: {0}, min: {1}, max: {2}".format(image.shape, image.min(), image.max()))
 
@@ -86,13 +88,13 @@ print("labels:", labels_a.shape,"\nimages:", images_a.shape)
 # Create a graph to hold the model.
 graph = tf.Graph()
 with graph.as_default():
-    images_ph = tf.placeholder(tf.float32, [None, 32, 32, 3])
+    images_ph = tf.placeholder(tf.float32, [None, IMAGE_SIZE, IMAGE_SIZE, 3])
     labels_ph = tf.placeholder(tf.int32, [None])
     images_flat = tf.contrib.layers.flatten(images_ph)
     logits = tf.contrib.layers.fully_connected(images_flat, 62, tf.nn.relu)
     predicted_labels = tf.argmax(logits, 1)
     loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(labels=labels_ph,logits=logits))
-    train = tf.train.AdamOptimizer(learning_rate=0.001).minimize(loss)
+    train = tf.train.AdamOptimizer(learning_rate=0.0001).minimize(loss)
     init = tf.global_variables_initializer()
     print("images_flat:", images_flat)
     print("logits:", logits)
@@ -101,7 +103,7 @@ with graph.as_default():
 
 session = tf.Session(graph=graph)
 _ = session.run([init])
-for i in range(201):
+for i in range(2001):
     _, loss_value = session.run([train, loss],feed_dict={images_ph: images_a, labels_ph: labels_a})
     if i % 10 == 0:
         print("Loss:", loss_value)
@@ -128,7 +130,7 @@ plt.show()
     
 # Load the test dataset.
 test_images, test_labels = load_datasets(test_data_dir)
-test_images32 = [skimage.transform.resize(image, (32, 32)) for image in test_images]
+test_images32 = [skimage.transform.resize(image, (IMAGE_SIZE, IMAGE_SIZE)) for image in test_images]
 display_images_and_labels(test_images32, test_labels)
 
 
