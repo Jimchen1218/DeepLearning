@@ -1,6 +1,6 @@
 '''
-name:test_cnn_predict.py
-create_date:9/15/2017
+name:test_catsanddogs.py
+create_date:9/26/2017
 author:jimchen1218@sina.com
 '''
 
@@ -16,7 +16,7 @@ import tensorflow as tf
 
 print(__doc__)
 
-BATCH_SIZE = 2
+BATCH_SIZE = 5
 CAPACITY = 256
 IMG_W = 208
 IMG_H = 208
@@ -24,7 +24,6 @@ IMG_H = 208
 
 def get_datasets_catsanddogs(file_dir):
     # file_dir
-    # return
     cats = []
     label_cats = []
     dogs = []
@@ -57,7 +56,6 @@ def get_datasets_batch(image, label, image_W, image_H, batch_size, capacity):
     # image_W, image_H
     # batch_size
     # capacity
-    # return
 
     image = tf.cast(image, tf.string)
     label = tf.cast(label, tf.int32)
@@ -69,10 +67,10 @@ def get_datasets_batch(image, label, image_W, image_H, batch_size, capacity):
     image = tf.image.decode_jpeg(image_contents, channels=3)
 
 
-    # image = tf.image.resize_image_with_crop_or_pad(image, image_W, image_H)
+    #image = tf.image.resize_image_with_crop_or_pad(image, image_W, image_H)
     image = tf.image.resize_images(image, [image_H, image_W], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
     image = tf.cast(image, tf.float32)
-    # image = tf.image.per_image_standardization(image)
+    #image = tf.image.per_image_standardization(image)
     image_batch, label_batch = tf.train.batch([image, label],
                                               batch_size=batch_size,
                                               num_threads=64,
@@ -82,7 +80,7 @@ def get_datasets_batch(image, label, image_W, image_H, batch_size, capacity):
     return image_batch, label_batch    
     
 
-train_dir = "data\\train\\"
+train_dir = "catsanddogs\\train\\"
 image_list, label_list = get_datasets_catsanddogs(train_dir)
 image_batch, label_batch = get_datasets_batch(image_list, label_list, IMG_W, IMG_H, BATCH_SIZE, CAPACITY)
 
@@ -93,11 +91,12 @@ with tf.Session() as sess:
     try:
         while not coord.should_stop() and i < 1:
             img, label = sess.run([image_batch, label_batch])
-
+						
             for j in np.arange(BATCH_SIZE):
                 print("label: %d" % label[j])
+                plt.subplot(1,BATCH_SIZE,j+1)
                 plt.imshow(img[j, :, :, :])
-                plt.show()
+            plt.show()
             i += 1
     except tf.errors.OutOfRangeError:
         print("done!")
