@@ -19,6 +19,7 @@ import argparse
 import sys
 import os
 import random
+import gc
 #import tempfile
 
 print (__doc__)
@@ -194,6 +195,7 @@ def main(_):
     predict_randomimages(test_data_dir,sess,predicted_labels,x,keep_prob)
     time_duration=int(time.time() - time_start)
     print("total time duration:%ss"%(time_duration))
+    gc.collect()
 
 #程序主入口
 if __name__ == "__main__":

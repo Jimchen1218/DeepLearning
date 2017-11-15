@@ -23,9 +23,9 @@ from PIL import Image
 
 print (__doc__)
 
-EPOCH_SIZE = 50
-BATCH_SIZE = 5
-LEARNING_RATE =0.001
+EPOCH_SIZE = 150
+BATCH_SIZE = 10
+LEARNING_RATE =0.0001
 IMAGE_SIZE =32
 HIDDEN_SIZE = 256
 CLASS_LABELS = 62
@@ -84,7 +84,7 @@ def load_datasets_norm(data_dir,img_crop_size):
 		return images, labels
 
 def display_images_and_labels(images, labels):
-		print("\ndisplay_images_and_labels labels:",labels)
+		#print("\ndisplay_images_and_labels labels:",labels)
 		unique_labels = set(labels)
 		print("\ndisplay_images_and_labels unique_labels:%s"%(unique_labels))
 		plt.figure(figsize=(15, 15))
@@ -198,7 +198,7 @@ def predict_testrandomimages(data_dir,sess,predicted_labels,images_ph,imagesize=
 		    max = np.max(prediction)
 		    print("max:%s"%(max))
 		    print("pred_label:%s"%(pred_label))
-		    print("total truth:%s \nprediction:%s \npredicted_label:%s"%(truth,prediction,pred_label))
+		    #print("total truth:%s \nprediction:%s \npredicted_label:%s"%(truth,prediction,pred_label))
 		    plt.subplot(5, 2,1+i)
 		    plt.axis('off')
 		    if truth == pred_label:
@@ -226,7 +226,7 @@ def main(_):
 		tf.global_variables_initializer().run()
 		
 		for i in range(FLAGS.max_steps):
-				_,acc = sess.run([train_opt,accuracy], feed_dict={x: images, y_: labels, keep_prob: 0.8})
+				_,acc = sess.run([train_opt,accuracy], feed_dict={x: images, y_: labels, keep_prob: 0.5})
 				if i % BATCH_SIZE == 0:
 					print('Accuracy at step %s: %s' % (i, acc))
 		predict_testrandomimages(test_data_dir,sess,predicted_labels,x)
