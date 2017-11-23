@@ -1,6 +1,6 @@
 '''
 name:object_detection_test.py
-date:11/20/2017
+date:11/23/2017
 author:jimchen1218@sina.com
 '''
 
@@ -30,20 +30,16 @@ if tf.__version__ != '1.4.0':
 # This is needed since the notebook is stored in the object_detection folder.
 sys.path.append("..")
 
-from utils import label_map_util
-from utils import visualization_utils as vis_util
+import label_map_util
+import visualization_utils as vis_util
 
 
-  
-#open a image 
 def img_open(img_file):
 		ret_img = cv2.imread(img_file)
 		return ret_img
 		
 def img_save(img_file,filename):
 	  cv2.imwrite(filename,img_file)
-		#ret_img = cv2.imwrite(img_file)
-		#return ret_img		
 
 def img_get_height_width(image):
 		ret_h,ret_w = image.shape[:2]
@@ -235,7 +231,9 @@ def img_change_fg(image,image_cut):
 
 
 # What model to download.
-MODEL_NAME = 'rfcn_resnet101_coco_11_06_2017'
+MODEL_NAME = 'rfcn_resnet101_clothes_11_23_2017'
+#'rfcn_resnet101_clothes_11_23_2017'
+#'rfcn_resnet101_coco_11_06_2017'
 #'ssd_mobilenet_v1_clothes_11_22_2017'  
 #'ssd_mobilenet_v1_coco_11_06_2017' 
 #'best rfcn_resnet101_coco_11_06_2017'  
@@ -243,18 +241,14 @@ MODEL_NAME = 'rfcn_resnet101_coco_11_06_2017'
 #ssd_inception_v2_coco_2017_11_08 
 #'ssd_mobilenet_v1_coco_11_06_2017'
 MODEL_FILE = MODEL_NAME + '.tar.gz'
-DOWNLOAD_BASE = 'http://download.tensorflow.org/models/object_detection/'
 
 # Path to frozen detection graph. This is the actual model that is used for the object detection.
 PATH_TO_CKPT = MODEL_NAME + '/frozen_inference_graph.pb'
 
 # List of the strings that is used to add correct label for each box.
-PATH_TO_LABELS = os.path.join('data', 'clothes_label_map.pbtxt') #mscoco_label_map clocthes_label_map
+PATH_TO_LABELS = os.path.join('data', 'clothes_label_map.pbtxt') #clocthes_label_map
+NUM_CLASSES = 2
 
-NUM_CLASSES = 1
-
-#opener = urllib.request.URLopener()
-#opener.retrieve(DOWNLOAD_BASE + MODEL_FILE, MODEL_FILE)
 tar_file = tarfile.open(MODEL_FILE)
 for file in tar_file.getmembers():
   file_name = os.path.basename(file.name)
@@ -279,45 +273,32 @@ def load_image_into_numpy_array(image):
   return np.array(image.getdata()).reshape(
       (im_height, im_width, 3)).astype(np.uint8)
   
-# For the sake of simplicity we will use only 2 images:
-# image1.jpg
-# image2.jpg
-# If you want to test the code with your images, just add path to the images to the TEST_IMAGE_PATHS.
-
-
-# Size, in inches, of the output images.
 
 def img_grubcut_and_change_bg(img_path,img_bbox):
 		#img_name = img_path.split('\\')[-1]
 		#print("img_grubcut_and_change_bg img_name:%s"%(img_name))
 		image_orig = img_open(img_path)
-		cv2.imshow('image_orig',image_orig)
-		#cv2.waitKey(0)
 		mask = mask_build(image_orig)
 		#image = img_contour(image_orig)	#must be gray	image
 		image = img_grabcut(image_orig,mask,img_bbox) #must be bgr image
-		#cv2.imshow('grabcut image',image)
-		#cv2.waitKey(0)
 		#print("img:%s\n"%(image))
 		image = img_bgr2gray(image)
 		image = img_erode_dilate(image)
 		image = img_medianblur(image)
 		
-		#cv2.imshow('image',erode)
-		#cv2.waitKey(0)		
 		image_bg = img_open('blankit_bg.jpg')
 		image_change_bg=img_change_bg(image_orig,image_bg,image)
 		cv2.imshow('image_change_bg',image_change_bg)
 		cv2.waitKey(0)
 		
 		#image_change_bg=img_change_fg(image_change_bg,image)
-		#cv2.imshow('image_change_fg',image_change_bg)
+		#cv2.imshow('image_change_fg',image_change_fg)
 		#cv2.waitKey(0)
 
 
 def main():
 		PATH_TO_TEST_IMAGES_DIR = 'test_images'
-		TEST_IMAGE_PATHS = [ os.path.join(PATH_TO_TEST_IMAGES_DIR, 'image{}.jpg'.format(i)) for i in range(1, 2) ]
+		TEST_IMAGE_PATHS = [ os.path.join(PATH_TO_TEST_IMAGES_DIR, 'image{}.jpg'.format(i)) for i in range(1, 5) ]
 		IMAGE_SIZE = (12, 8)
 		with detection_graph.as_default():
 				with tf.Session(graph=detection_graph) as sess:
