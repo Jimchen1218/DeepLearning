@@ -195,6 +195,7 @@ def img_change_bg(image_orig,image_bg,img_erode):
 		#	height 
 		
 		image_resize_bg = cv2.resize(image_bg,(width,height),interpolation=cv2.INTER_CUBIC)
+		
 		image_bg_resize = image_resize_bg[0:height,0:width]
 		#center_x = np.floor(bg_width/2)
 		#center_y = np.floor(bg_height/2)
@@ -205,8 +206,8 @@ def img_change_bg(image_orig,image_bg,img_erode):
 				if img_erode[i,j]!=0:
 					#print("i:%d,j:%d,blur[i,j]:%s\n"%(i,j,dilate[i,j]))
 					image_resize_bg[i,j]=image_orig[i,j]
-				else:
-					image_resize_bg[i,j] = 255
+				#else:
+				#	image_resize_bg[i,j] = 255
 					
 		img_save(image_resize_bg,"pic_bg.jpg")		
 		return image_resize_bg
@@ -232,12 +233,13 @@ def img_change_fg(image,image_cut):
 
 # What model to download.
 MODEL_NAME = 'rfcn_resnet101_clothes_11_23_2017'
+#ssd_mobilenet_v1_clothes_11_22_2017
 #'rfcn_resnet101_clothes_11_23_2017'
 #'rfcn_resnet101_coco_11_06_2017'
 #'ssd_mobilenet_v1_clothes_11_22_2017'  
 #'ssd_mobilenet_v1_coco_11_06_2017' 
 #'best rfcn_resnet101_coco_11_06_2017'  
-#'rfcn_resnet101_coco_11_06_2017'  
+#'faster_rcnn_resnet50_coco_2017_11_08.tar.gz'  
 #ssd_inception_v2_coco_2017_11_08 
 #'ssd_mobilenet_v1_coco_11_06_2017'
 MODEL_FILE = MODEL_NAME + '.tar.gz'

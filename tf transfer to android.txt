@@ -1,0 +1,94 @@
+1、安装tensorflow
+2、安装构建工具bazel
+	1）JDK 8
+			sudo apt-get install openjdk-8-jdk
+	2）添加APT库
+			echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list`
+			curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
+	3）安装bazel
+			sudo apt-get update && sudo apt-get install bazel
+			sudo apt-get upgrade bazel
+			上面方法一般不成功
+			可使用下面方法：
+			 先下载二进制包：bazel-0.7.0-installer-linux-x86_64.sh
+			 chmod +x bazel-0.7.0-installer-linux-x86_64.sh
+			 ./bazel-0.7.0-installer-linux-x86_64.sh运行即可，自带SDK包。
+3、下载Tensorflow源码
+			git clone --recurse-submodules https://github.com/tensorflow/tensorflow.git
+			--recurse-submodules参数是用来防止后面出现的protobuf错误
+4、配置本地环境	
+		载好源码后，会出现一个tensorflow的文件夹，这里面放着所有tensorflow的源码，但我们要关注源码位于tensorflow\tensorflow\examples\android目录
+		1)修改WORKSPACE文件	
+		# Uncomment and update the paths in these entries to build the Android demo.
+  #android_sdk_repository(
+  #    name = "androidsdk",
+  #    api_level = 23,
+  #    # Ensure that you have the build_tools_version below installed in the 
+  #    # SDK manager as it updates periodically.
+  #    build_tools_version = "25.0.2",
+  #    # Replace with path to Android SDK on your system
+  #    path = "<PATH_TO_SDK>",
+  #)
+  #
+  # Android NDK r12b is recommended (higher may cause issues with Bazel)
+  #android_ndk_repository(
+  #    name="androidndk",
+  #    path="<PATH_TO_NDK>",
+  #    # This needs to be 14 or higher to compile TensorFlow. 
+  #    # Note that the NDK version is not the API level.
+  #    api_level=14)
+  
+  修改成：
+  
+android_sdk_repository(
+    name = "androidsdk",
+    # 设置成你安装sdk的最高版本，对应修改manifest.xml以及gradle的target
+    api_level = 26,
+    # Ensure that you have the build_tools_version below installed in the 
+    # SDK manager as it updates periodically.
+    build_tools_version = "26.0.3",
+    # Replace with path to Android SDK on your system
+    path = "/home/jim/android-sdk-linux",
+)
+
+# 推荐使用r12版本，更高的版本可能会造成bazel出错
+android_ndk_repository(
+    name="androidndk",
+    path="/home/jim/android-sdk-linux/ndk-bundle",
+    # This needs to be 14 or higher to compile TensorFlow. 
+    # Note that the NDK version is not the API level.
+    api_level=14)
+			
+	注意： 
+		1. api_level需要设置成你本地sdk最高的版本，推荐23及以上，在android:build.gradle 以及AndroidManifest.xml也对应修改targetSdkVersion 
+		2. ndk的版本，推荐使用r12，否则bazel编译的时候会报错。		
+			
+5、编译tensorflow_demo	
+		进入到tensorflow目录下，输入以下命令：
+			bazel build -c opt //tensorflow/examples/android:tensorflow_demo
+			
+6、安装apk
+		开启手机的调试模式，运行：
+			adb install -r bazel-bin/tensorflow/examples/android/tensorflow_demo.apk	
+			
+7、使用AS			
+		可以在Android Studio中直接打开tensorflow/examples/android，但是需要配置好你的gradle、sdk、ndk 
+		1. gradle必须要在3.3以上版本 
+		2. build_tool_version需要指定在25以上 
+		3. 配置好你的ndk 
+		4. 很重要：在android:build.gradle 中配置好你的bazel路径，默认的是如下的：
+					def bazelLocation = '/usr/local/bin/bazel'
+			但是在该路径下并没有bazel，因此会报如下错误：
+					Error:Execution failed for task ':buildNativeBazel'.
+					A problem occurred starting process 'command '/usr/local/bin/bazel''
+			此时只需要把路径改成你的bazel路径就好，比如我的是：
+					def bazelLocation = '/usr/bin/bazel'
+			这样配置完毕后，就能直接在AS中使用run去运行了。	
+			
+	 AS下载与安装：
+	 	首先自己去Android Studio中文网站（http://www.android-studio.org/）下载 linux版本
+	 	下载完毕以后，右击tar压缩包 提取（即解压），然后把解压出来的文件夹 放到 /opt目录下。命令如下：
+		sudo mv ./android-studio/ /opt/
+		然后开始安装，执行studio.sh文件，命令是：
+		sudo /opt/android-studio/bin/studio.sh		
+			
