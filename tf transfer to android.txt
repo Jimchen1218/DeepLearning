@@ -66,6 +66,8 @@ android_ndk_repository(
 5、编译tensorflow_demo	
 		进入到tensorflow目录下，输入以下命令：
 			bazel build -c opt //tensorflow/examples/android:tensorflow_demo
+	 出现问题：刚开始使用PYTHON3,在编译最后部分报错，print USAGE，后把默认路径改为PYTHON2编译OK。
+	 原因：应该是bazel不支持python3.
 			
 6、安装apk
 		开启手机的调试模式，运行：
@@ -84,6 +86,8 @@ android_ndk_repository(
 			此时只需要把路径改成你的bazel路径就好，比如我的是：
 					def bazelLocation = '/usr/bin/bazel'
 			这样配置完毕后，就能直接在AS中使用run去运行了。	
+		
+		存在问题：使用UBUNTU虚拟机，在实际安装过程中发现，AS无法正常启动模拟器。后百度GENYMOTION，依旧无法使用。果断放弃，直接上真机，领了台ANDROID 华为手机。
 			
 	 AS下载与安装：
 	 	首先自己去Android Studio中文网站（http://www.android-studio.org/）下载 linux版本
@@ -91,4 +95,10 @@ android_ndk_repository(
 		sudo mv ./android-studio/ /opt/
 		然后开始安装，执行studio.sh文件，命令是：
 		sudo /opt/android-studio/bin/studio.sh		
+		
+
+8、修改TF Detect打造属于自己的检测模型。
+   第一步：先训练出自己的模型文件和类型文本文件（第一行必须为？？？，第二行开始才是真正的类别）。
+   第二步：修改代码文件ObjectDetection文件，替换成上面生成的两个文件。bazel build -c opt //tensorflow/examples/android:tensorflow_demo
+   第三步：编译生成APK文件。
 			
