@@ -69,41 +69,6 @@ def scratch_imgs(url,foldname):
 	get_image(html,name,foldname)
 	print("scratch_imgs success!")
 
-def scratch_imgs_from_multiURL(url,foldname):
-	mkdir(foldname)
-	for i in range(0,10,1):
-		html = download_page(url+str(i))
-		get_image(html,i,foldname)
-	
-def scratch_imgs_bags():
-	foldname = "taobao_boxes"
-	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E7%AE%B1%E5%8C%85&page="
-	mkdir(foldname)
-	for i in range(0,10,1):
-		html = download_page(url+str(i))
-		get_image(html,i,foldname)	
-	
-def scratch_imgs_shoes():
-	foldname = "taobao_shoes"
-	#shoe
-	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E9%9E%8B&page="
-	#afwx
-	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E9%9D%B4&page="
-	mkdir(foldname)
-	for i in range(0,20,1):
-		html = download_page(url+str(i))
-		get_image(html,i+30,foldname)
-	
-def scratch_imgs_jewelry():
-	foldname = "taobao_jewelry"
-	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E9%A6%96%E9%A5%B0&page="
-	mkdir(foldname)
-	for i in range(0,20,1):
-		html = download_page(url+str(i))
-		get_image(html,i,foldname)	
-	
-#jewelry
-
 
 #1.1 overcoat
 def scratch_imgs_clothes_overcoat():
@@ -189,12 +154,13 @@ def scratch_imgs_clothes_T_shirt():
 		html = download_page(url+str(i))
 		get_image(html,i+5,foldname)
 		
+#1 clothes		
 def scratch_imgs_clothes():		
-		scratch_imgs_clothes_overcoat()
-		scratch_imgs_clothes_coat()
-		scratch_imgs_clothes_sweater()
-		scratch_imgs_clothes_shirt()
-		scratch_imgs_clothes_fleece()
+		#scratch_imgs_clothes_overcoat()
+		#scratch_imgs_clothes_coat()
+		#scratch_imgs_clothes_sweater()
+		#scratch_imgs_clothes_shirt()
+		#scratch_imgs_clothes_fleece()
 		scratch_imgs_clothes_T_shirt()
 		
 #2.1 suit_pants
@@ -253,11 +219,12 @@ def scratch_imgs_clothes_sport_pants():
 		html = download_page(url+str(i))
 		get_image(html,i+5,foldname)
 
+#2 pants
 def scratch_imgs_pants():		
-		scratch_imgs_clothes_suit_pants()
-		scratch_imgs_clothes_casual_pants()
-		scratch_imgs_clothes_jeans()
-		scratch_imgs_clothes_sport_pants()
+	scratch_imgs_clothes_suit_pants()
+	scratch_imgs_clothes_casual_pants()
+	scratch_imgs_clothes_jeans()
+	scratch_imgs_clothes_sport_pants()
 
 
 #3.1 skirt
@@ -286,7 +253,8 @@ def scratch_imgs_clothes_suspender_skirt():
 	for i in range(1,5,1):
 		html = download_page(url+str(i))
 		get_image(html,i,foldname)
-		
+
+#3 skirt		
 def scratch_imgs_skirt():		
 	scratch_imgs_clothes_skirt()
 	scratch_imgs_clothes_dress()
@@ -337,21 +305,485 @@ def scratch_imgs_clothes_leisure_suit():
 		html = download_page(url+str(i))
 		get_image(html,i+5,foldname)		
 		
+#4 suit		
 def scratch_imgs_suit():
 	scratch_imgs_clothes_tailored_suit()
 	scratch_imgs_clothes_sweat_suit()
 	scratch_imgs_clothes_leisure_suit()
 
+#5.1 gym_shoes
+def scratch_imgs_gym_shoes():
+	foldname = "5_gym_shoes"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E8%BF%90%E5%8A%A8%E9%9E%8B%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E8%BF%90%E5%8A%A8%E9%9E%8B%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)		
+
+#5.2 leisure_shoes
+def scratch_imgs_leisure_shoes():
+	foldname = "5_leisure_shoes"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E4%BC%91%E9%97%B2%E9%9E%8B%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E4%BC%91%E9%97%B2%E9%9E%8B%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)	
+
+#5.3 leather_shoes
+def scratch_imgs_leather_shoes():
+	foldname = "5_leather_shoes"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E7%9A%AE%E9%9E%8B%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E7%9A%AE%E9%9E%8B%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)	
+
+#5.4 boots
+def scratch_imgs_boots():
+	foldname = "5_boots"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E9%9D%B4%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E9%9D%B4%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)	
+		
+#5.5 sandal
+def scratch_imgs_sandal():
+	foldname = "5_sandal"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E5%87%89%E9%9E%8B%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E5%87%89%E9%9E%8B%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)		
+		
+#5.6 slipper
+def scratch_imgs_slipper():
+	foldname = "5_slipper"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%8B%96%E9%9E%8B%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%8B%96%E9%9E%8B%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)				
+		
+#5 shoes		
+def scratch_imgs_shoes():	
+	#scratch_imgs_gym_shoes()
+	#scratch_imgs_leisure_shoes()
+	scratch_imgs_leather_shoes()
+	scratch_imgs_boots()
+	scratch_imgs_sandal()
+	scratch_imgs_slipper()
+		
+#6.1 backpack
+def scratch_imgs_backpack():
+	foldname = "6_backpack"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E5%8F%8C%E8%82%A9%E5%8C%85%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E5%8F%8C%E8%82%A9%E5%8C%85%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)			
+		
+#6.2 single_shoulder_bag
+def scratch_imgs_single_shoulder_bag():
+	foldname = "6_single_shoulder_bag"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E5%8D%95%E8%82%A9%E5%8C%85%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E5%8D%95%E8%82%A9%E5%8C%85%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)			
+		
+#6.3 handbag
+def scratch_imgs_handbag():
+	foldname = "6_handbag"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%89%8B%E6%8F%90%E5%8C%85%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%89%8B%E6%8F%90%E5%8C%85%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)		
+			
+#6.4 clutch_handbag
+def scratch_imgs_clutch_handbag():
+	foldname = "6_clutch_handbag"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%89%8B%E6%8B%BF%E5%8C%85%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%89%8B%E6%8B%BF%E5%8C%85%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)		
+		
+#6.5 wallet
+def scratch_imgs_wallet():
+	foldname = "6_wallet"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E9%92%B1%E5%8C%85%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E9%92%B1%E5%8C%85%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)	
+		
+#6.6 suitcase
+def scratch_imgs_suitcase():
+	foldname = "6_suitcase"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%97%85%E8%A1%8C%E7%AE%B1%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%97%85%E8%A1%8C%E7%AE%B1%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)
+						
+#6 bags		
+def scratch_imgs_bags():	
+	scratch_imgs_backpack()
+	scratch_imgs_single_shoulder_bag()
+	scratch_imgs_handbag()
+	scratch_imgs_clutch_handbag()
+	scratch_imgs_wallet()
+	scratch_imgs_suitcase()
+
+#7.1 hat
+def scratch_imgs_hat():
+	foldname = "7_hat"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E5%B8%BD%E5%AD%90%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E5%B8%BD%E5%AD%90%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)
+		
+#7.2 scaf
+def scratch_imgs_scaf():
+	foldname = "7_scaf"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E5%9B%B4%E5%B7%BE%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E5%9B%B4%E5%B7%BE%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)		
+		
+#7.3 kerchief
+def scratch_imgs_kerchief():
+	foldname = "7_kerchief"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%96%B9%E5%B7%BE%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%96%B9%E5%B7%BE%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)		
+		
+
+#7.4 tie
+def scratch_imgs_tie():
+	foldname = "7_tie"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E9%A2%86%E5%B8%A6%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E9%A2%86%E5%B8%A6%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)			
+		
+
+#7.5 bowtie
+def scratch_imgs_bowtie():
+	foldname = "7_bowtie"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E9%A2%86%E7%BB%93%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E9%A2%86%E7%BB%93%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)	
+		
+
+#7.6 belt
+def scratch_imgs_belt():
+	foldname = "7_belt"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E8%85%B0%E5%B8%A6%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E8%85%B0%E5%B8%A6%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)		
+		
+#7.7 glove
+def scratch_imgs_glove():
+	foldname = "7_glove"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%89%8B%E5%A5%97%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%89%8B%E5%A5%97%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)	
+
+#7.8 glasses
+def scratch_imgs_glasses():
+	foldname = "7_glasses"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E7%9C%BC%E9%95%9C%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E7%9C%BC%E9%95%9C%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)	
+		
+#7.9 watch
+def scratch_imgs_watch():
+	foldname = "7_watch"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%89%8B%E8%A1%A8%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%89%8B%E8%A1%A8%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)			
+		
+#7.10 hair_jewelry
+def scratch_imgs_hair_jewelry():
+	foldname = "7_hair_jewelry"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E5%8F%91%E9%A5%B0&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)			
+		
+def scratch_imgs_accessory():
+	scratch_imgs_hat()
+	scratch_imgs_scaf()
+	scratch_imgs_kerchief()
+	scratch_imgs_tie()
+	scratch_imgs_bowtie()
+	scratch_imgs_belt()
+	scratch_imgs_glove()
+	scratch_imgs_glasses()
+	scratch_imgs_watch()
+	scratch_imgs_hair_jewelry()
+	
+	
+#8.1 necklace
+def scratch_imgs_necklace():
+	foldname = "8_necklace"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E9%A1%B9%E9%93%BE%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E9%A1%B9%E9%93%BE+%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)	
+		
+#8.2 earrings
+def scratch_imgs_earrings():
+	foldname = "8_earrings"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E8%80%B3%E7%8E%AF%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E8%80%B3%E7%8E%AF%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)	
+		
+#8.3 earstud
+def scratch_imgs_earstud():
+	foldname = "8_earstud"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E8%80%B3%E9%92%89%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E8%80%B3%E9%92%89%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)				
+		
+#8.4 fingerring
+def scratch_imgs_fingerring():
+	foldname = "8_fingerring"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%88%92%E6%8C%87%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%88%92%E6%8C%87%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)		
+		
+#8.5 bracelet
+def scratch_imgs_bracelet():
+	foldname = "8_bracelet"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%89%8B%E9%93%BE%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%89%8B%E9%93%BE%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)				
+		
+#8.6 bangle
+def scratch_imgs_bangle():
+	foldname = "8_bangle"
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%89%8B%E9%95%AF%E7%94%B7&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i,foldname)
+	
+	url="http://uland.taobao.com/sem/tbsearch?refpid=mm_26632360_8858797_29866178&clk1=508712bfca2dd4cea1baa3a486d10036&keyword=%E6%89%8B%E9%95%AF%E5%A5%B3&page="
+	mkdir(foldname)
+	for i in range(1,5,1):
+		html = download_page(url+str(i))
+		get_image(html,i+5,foldname)			
+		
+def scratch_imgs_jewelry():
+	scratch_imgs_necklace()
+	scratch_imgs_earrings()
+	scratch_imgs_earstud()
+	scratch_imgs_fingerring()
+	scratch_imgs_bracelet()
+	scratch_imgs_bangle()
+
 
 def scratch_imgs():
 	print("scratch_imgs clothes start!")
-	scratch_imgs_clothes()
+	#scratch_imgs_clothes()
 	print("scratch_imgs pants start!")
-	scratch_imgs_pants()
+	#scratch_imgs_pants()
 	print("scratch_imgs skirt start!")
-	scratch_imgs_skirt()
+	#scratch_imgs_skirt()
 	print("scratch_imgs suit start!")
-	scratch_imgs_suit()
+	#scratch_imgs_suit()
+	
+	print("scratch_imgs shoes start!")
+	scratch_imgs_shoes()
+	print("scratch_imgs bags start!")
+	scratch_imgs_bags()
+	print("scratch_imgs accessory start!")
+	scratch_imgs_accessory()
 	
 			
 scratch_imgs()
