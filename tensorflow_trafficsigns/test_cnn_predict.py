@@ -23,7 +23,7 @@ from PIL import Image
 
 print (__doc__)
 
-EPOCH_SIZE = 150
+EPOCH_SIZE = 500
 BATCH_SIZE = 10
 LEARNING_RATE =0.0001
 IMAGE_SIZE =32

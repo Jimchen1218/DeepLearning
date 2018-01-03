@@ -22,8 +22,8 @@ import matplotlib.image as mpimg
 import gc
 print(__doc__)
 
-if tf.__version__ != '1.4.0':
-  raise ImportError('Please upgrade your tensorflow installation to v1.4.0!')
+#if tf.__version__ != '1.4.0':
+#  raise ImportError('Please upgrade your tensorflow installation to v1.4.0!')
   
 #%matplotlib inline
 

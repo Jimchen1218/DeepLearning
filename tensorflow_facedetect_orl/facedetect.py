@@ -22,6 +22,8 @@ import random
 import gc
 #import tempfile
 
+os.environ["CUDA_VISIBLE_DEVICES"]="-1" 
+
 print (__doc__)
 
 EPOCH_SIZE = 30    #30 best value ;50 overfit;10 underfit
