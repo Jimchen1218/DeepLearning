@@ -1,7 +1,7 @@
 '''
 filename:rename files 
 author:jimchen1218@sina.com
-created date:1/16/2018
+created date:12/28/2017
 '''
 
 import os
@@ -261,35 +261,54 @@ def rename_multidir():
 	rename_filelist("8_3Fingerring","Fingerring_Jewelry")
 	rename_filelist("8_4Bangle","Bangle_Jewelry")
 
-xml_subdir_path = "\\xmls\\"
+xml_subdir_path = "\\annotations\\xmls\\"
+jpg_subdir_path = "\\images\\"
 		
-def rename_uniform_add_number(subdir_path):
+def batch_rename_files_number(subdir_path,number_len):
 	paths=[]
 	cwd_dir = os.getcwd()
 	full_dir_path = cwd_dir + subdir_path
 	fileslist_in_dir = os.listdir(full_dir_path)
 	num_files = len(fileslist_in_dir)
-	print('num_files:',num_files)
+	print('batch_rename_files_number num_files:',num_files)
 	s_num_files = len(str(num_files))	
 	
 	for path_name in fileslist_in_dir:
-		print("rename_uniform_add_number path_name:",path_name)
+		print("batch_rename_files_number path_name:",path_name)
 		old_number = path_name.split('.')[0].split('_')[-1]
-		new_number = str(int(old_number)+600).zfill(3)
-		print("rename_uniform_add_number name:",new_number)
+		new_number = str(int(old_number)).zfill(number_len)
+		print("batch_rename_files_number name:",new_number)
 		short_filename= path_name.split('.')[0]
 		suffix_filename= path_name.split('.')[-1]
 		short_filename = short_filename.replace(old_number,new_number)
 		new_filename= short_filename+'.'+suffix_filename
-		print("rename_filelist_replacename new_filename:",new_filename)
+		print("batch_rename_files_number new_filename:",new_filename)
 		os.rename(os.path.join(full_dir_path,path_name),os.path.join(full_dir_path,new_filename))
 	
 
-
-
-def	main():			
-	rename_uniform_add_number(xml_subdir_path)
+def batch_rename_files(subdir_path,new_name_prefix):
+	paths=[]
+	cwd_dir = os.getcwd()
+	full_dir_path = cwd_dir + subdir_path
+	fileslist_in_dir = os.listdir(full_dir_path)
+	num_files = len(fileslist_in_dir)
+	print('batch_rename_files num_files:',num_files)
+	s_num_files = len(str(num_files))	
 	
+	for path_name in fileslist_in_dir:
+		print("batch_rename_files path_name:",path_name)
+		old_name_prefix = path_name.split('.')[0].split('_')[0]
+		new_name = path_name.replace(old_name_prefix,new_name_prefix)
+		print("batch_rename_files new_name:",new_name)
+		os.rename(os.path.join(full_dir_path,path_name),os.path.join(full_dir_path,new_name))
+
+def	main():
+	#make up pos sample	
+	batch_rename_files_number(xml_subdir_path,4)
+	batch_rename_files_number(jpg_subdir_path,4)
+	#make up neg sample
+	#batch_rename_files("\\images\\","Others")
+	#batch_rename_files("\\xmls\\","Others")
 	gc.collect()
 			
 			

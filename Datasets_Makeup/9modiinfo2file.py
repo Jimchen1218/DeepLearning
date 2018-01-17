@@ -55,11 +55,11 @@ def mofiinfo2file(fullpath):
 		fileold.close()
 		
 import re
-path="xmls\\"
+path="annotations\\xmls\\"
 def modifyname(relapath):
 	cur_path = os.getcwd()
 	fullpath = cur_path+"\\"+ path +relapath
-	prefix = relapath.split(".")[0][:-4]
+	prefix = relapath.split(".")[0][:-5]
 	print("modifyname prefix:",prefix)
 	fileold = open(fullpath,"rb+")
 	totallines = fileold.readlines()
