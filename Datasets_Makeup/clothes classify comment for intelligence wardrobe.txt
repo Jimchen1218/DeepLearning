@@ -1,0 +1,58 @@
+智能衣柜分类：
+一、上装  upperwear
+	1 overcoat
+	2 coat
+	3 sweater
+	4 shirt
+	5 fleece
+	6 T_shirt
+	
+二、裤装 trousers
+1 西裤 suit
+2 休闲裤 casualpants
+3 牛仔裤 jeans
+4 运动裤 sport
+
+三、裙装  skirt
+1 半身裙 suspender
+2 连衣裙 dress
+3 背带裙 skirt
+
+四、套装  （无法自动辨识，后续可通过算法，上下两件分开检测到的衣服进行组合）
+1 西服套装 tailored suit
+2 运动套装 sweat suit
+3 休闲套装 leisure suit
+
+五、鞋子 shoes
+1 运动鞋 gym
+2 休闲鞋 leisure
+3 皮鞋 leather
+4 靴子 boots
+5 凉鞋 sandal
+6 拖鞋 slipper
+ 
+六、箱包 bagsandcases
+双肩包 backpack
+单肩包 singleshoulder
+手提包 handbag
+手拿包 clutch
+钱包 wallet
+旅行箱 suitcase
+
+七、配饰 ACC
+帽子 hat
+围巾 scaf（形态过多，无法自动辨识,去除该分类）
+方巾 kerchief（形态过多，无法自动辨识，去除该分类）
+领带 tie
+领结 bowtie 
+腰带 belt
+手套 glove
+眼镜 glasses
+发饰 hair jewelry（形态过多，无法自动辨识）
+
+八、首饰 jewelry
+项链 necklace（数据集是吊坠）
+耳饰环 earrings （耳钉+耳环）
+戒指 fingerring
+手饰 bangle（手链+手链）
+

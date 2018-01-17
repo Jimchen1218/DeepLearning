@@ -26,15 +26,14 @@ def DelFile(full_path):
 def del_xml():
 	paths=[]
 	cwd_dir = os.getcwd()
-	print("del_xml cwd_dir:",cwd_dir)
+	#print("del_xml cwd_dir:",cwd_dir)
 	
 	xml_dir_path = cwd_dir + xml_subdir_path
-	print("del_xml xml_dir_path:",xml_dir_path)
+	#print("del_xml xml_dir_path:",xml_dir_path)
 	jpg_dir_path = cwd_dir + jpg_subdir_path
-	print("del_xml jpg_dir_path:",jpg_dir_path)
+	#print("del_xml jpg_dir_path:",jpg_dir_path)
 	
 	xmllistdir = os.listdir(xml_dir_path)
-	print("del_xml \nxmllistdir:",xmllistdir)
 	for path_name in xmllistdir:
 		#if path_name.endswith('txt'):
 			#filefullpath = os.path.join(xml_dir_path, file_name)
@@ -46,16 +45,33 @@ def del_xml():
 	for i in range(totalnum_files):
 		filename = paths[i].split('.')[0]
 		pulljpgpath= jpg_dir_path + filename + jpg_suffix
-		print("\ndel_xml \npulljpgpath:",pulljpgpath)
+		#print("\ndel_xml \npulljpgpath:",pulljpgpath)
 		if not checkIsExist(pulljpgpath):
-			print("del_xml file is not exist,need to delete!")
+			#print("del_xml file is not exist,need to delete!")
 			pullxmlpath = xml_dir_path + filename + xml_suffix
-			print("del_xml \npullxmlpath:",pullxmlpath)
+			#print("del_xml \npullxmlpath:",pullxmlpath)
 			DelFile(pullxmlpath)
+
+
+from PIL import Image
+def del_allnotjpg():
+	cwd_dir = os.getcwd()
+	jpg_dir_path = cwd_dir + jpg_subdir_path
+	jpglistdir = os.listdir(jpg_dir_path)
+	for filename in jpglistdir:
+			path_name=jpg_dir_path+filename
+			img = Image.open(path_name)
+			if img.format != 'JPEG':
+					print("del_allnotjpg img.format:",img.format)
+					img.close()
+					DelFile(path_name)
 		
 def main():
-	del_xml()
-	print("main del_xml Finished!!!")	
+	print("main start del_allnotjpg")
+	del_allnotjpg()
+	print("main start del_xml")
+	del_xml()	
+	print("main Finished!!!")	
 
 if __name__ == "__main__":
 	main()
