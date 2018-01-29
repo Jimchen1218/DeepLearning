@@ -55,21 +55,21 @@ def mofiinfo2file(fullpath):
 		fileold.close()
 		
 import re
-path="annotations\\xmls\\"
-def modifyname(relapath):
+
+def modifycontent_name(relapath,path):
 	cur_path = os.getcwd()
 	fullpath = cur_path+"\\"+ path +relapath
 	prefix = relapath.split(".")[0][:-5]
-	print("modifyname prefix:",prefix)
+	print("modifycontent_name prefix:",prefix)
 	fileold = open(fullpath,"rb+")
 	totallines = fileold.readlines()
 	filenew= open(fullpath,"wb")
 	txt_buf =""
 	for line in totallines:
 		if '<name>' in line.decode():
-			print("modifyname line.decode():",line.decode())
+			print("modifycontent_name line.decode():",line.decode())
 			replacedStr =re.sub(r"<name>(\S+)", "<name>"+prefix+"</name>", line.decode());
-			print("modifyname replacedStr:",replacedStr)
+			print("modifycontent_name replacedStr:",replacedStr)
 			txt_buf +=replacedStr
 			continue
 		txt_buf += line.decode()	
@@ -79,7 +79,7 @@ def modifyname(relapath):
 	fileold.close()		
 
 		
-def modifyfilename(relapath):
+def modifycontent_filename(relapath,path):
 	cur_path = os.getcwd()
 	fullpath = cur_path+"\\"+ path +relapath
 	prefix = relapath.split(".")[0]
@@ -90,9 +90,9 @@ def modifyfilename(relapath):
 	txt_buf =""
 	for line in totallines:
 		if '<filename>' in line.decode():
-			print("modifyfilename line.decode():",line.decode())
+			print("modifycontent_filename line.decode():",line.decode())
 			replacedStr =re.sub(r"<filename>(\S+)", "<filename>"+prefix+".jpg"+"</filename>", line.decode());
-			print("modifyfilename replacedStr:",replacedStr)
+			print("modifycontent_filename replacedStr:",replacedStr)
 			txt_buf +=replacedStr
 			continue
 		txt_buf += line.decode()	
@@ -134,11 +134,11 @@ def replace_str_in_xmlline_repl(old_line_str,new_file_name):
 	return 	new_line_str	
 		
 		
-def modifypath(relapath):
+def modifycontent_path(relapath,path):
 	cur_path = os.getcwd()
 	fullpath = cur_path+"\\"+ path +relapath
 	newfilename = fullpath.split("\\")[-1].split(".")[0]
-	print("modifypath_ex newfilename:\n",newfilename)
+	print("modifycontent_path newfilename:\n",newfilename)
 	fileold = open(fullpath,"rb+")
 	totallines = fileold.readlines()
 	filenew= open(fullpath,"wb")
@@ -147,20 +147,29 @@ def modifypath(relapath):
 		if '<path>' in line.decode():
 			txt_buf +=replace_str_in_xmlline(line.decode(),newfilename)
 			continue
-		txt_buf += line.decode()	
+		txt_buf += line.decode()
 	filenew.write(txt_buf.encode())
 		
 	filenew.close()
 	fileold.close()
 
+def modifycontent(path):
+	cur_path = os.getcwd()
+	for root,dirs,files in os.walk(cur_path + path):
+		print(" files:",files)
+		for name in files:
+			if name.split('.')[-1] == 'xml':
+				modifycontent_filename(name,path)
+				modifycontent_path(name,path)
+				modifycontent_name(name,path)
 
-for root,dirs,files in os.walk(path):
-	print(" files:",files)
-	for name in files:
-		if name.split('.')[-1] == 'xml':
-			modifyfilename(name)
-			modifypath(name)
-			modifyname(name)
+
+def main():
+	modifycontent("\\annotations\\xml\\")
+	
+
+if __name__ == "__main__":
+	main()
 
 
 #sys.exit(0)

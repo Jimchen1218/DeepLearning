@@ -260,9 +260,6 @@ def rename_multidir():
 	rename_filelist("8_2Earrings","Earrings_Jewelry")
 	rename_filelist("8_3Fingerring","Fingerring_Jewelry")
 	rename_filelist("8_4Bangle","Bangle_Jewelry")
-
-xml_subdir_path = "\\annotations\\xmls\\"
-jpg_subdir_path = "\\images\\"
 		
 def batch_rename_files_number(subdir_path,number_len):
 	paths=[]
@@ -304,8 +301,8 @@ def batch_rename_files(subdir_path,new_name_prefix):
 
 def	main():
 	#make up pos sample	
-	batch_rename_files_number(xml_subdir_path,4)
-	batch_rename_files_number(jpg_subdir_path,4)
+	batch_rename_files_number("\\annotations\\xml\\",4)
+	batch_rename_files_number("\\images\\",4)
 	#make up neg sample
 	#batch_rename_files("\\images\\","Others")
 	#batch_rename_files("\\xmls\\","Others")

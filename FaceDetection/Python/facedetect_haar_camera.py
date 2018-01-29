@@ -17,6 +17,8 @@ cascade_fn_eye = 'haarcascade_eye.xml'
 def objectdetect(img, cascade):
     rects = cascade.detectMultiScale(img, scaleFactor=1.3,
                                     minNeighbors=5, minSize=(200, 200))
+    count_rects = len(rects)
+    print("objectdetect count_rects:",count_rects)
     if len(rects) == 0:
         return []
     rects[:,2:] += rects[:,:2]
@@ -26,17 +28,18 @@ def objectdetect(img, cascade):
 def draw_roi_rects(img, rects, color):
     for x1, y1, x2, y2 in rects:
         cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
+        
 
 def facedetection_pic():
-	img = cv2.imread("6family.jpg")
+	img = cv2.imread("img_414.jpg")
 	gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 	gray = cv2.equalizeHist(gray)
-	cascade = cv2.CascadeClassifier(cascade_fn)
+	cascade = cv2.CascadeClassifier(cascade_fn_face)
 	rects = objectdetect(gray, cascade)
 	draw_roi_rects(img, rects, (0, 255, 0))
-	cv2.imshow('Img',img)
-	key=cv2.waitKey(0)
-	#cv2.destroyAllWindows()		
+	cv2.imshow('Image face detect',img)
+	cv2.waitKey(0)
+	cv2.destroyAllWindows()		
 	
 
 def facedetection_camera():
@@ -73,7 +76,8 @@ def facedetection_camera():
 	cv2.destroyAllWindows()		
 
 def main():
-	facedetection_camera()
+	facedetection_pic()
+	#facedetection_camera()
 	
 if __name__ == '__main__':
 	main()

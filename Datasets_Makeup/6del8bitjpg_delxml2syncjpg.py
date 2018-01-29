@@ -2,10 +2,6 @@ import os
 import sys
 import re
 
-xml_subdir_path = "\\annotations\\xmls\\"
-jpg_subdir_path = "\\images\\"
-jpg_suffix = ".jpg"
-xml_suffix = ".xml"
 
 def checkIsExist(fullpath):
 	fullpath=fullpath.strip()
@@ -23,43 +19,64 @@ def DelFile(full_path):
 	return True
 
 
-def del_xml():
+def delxmlsyn2img(xml_subdir_path,jpg_subdir_path):
+	jpg_suffix = ".jpg"
+	xml_suffix = ".xml"
 	paths=[]
 	cwd_dir = os.getcwd()
-	#print("del_xml cwd_dir:",cwd_dir)
-	
 	xml_dir_path = cwd_dir + xml_subdir_path
-	#print("del_xml xml_dir_path:",xml_dir_path)
 	jpg_dir_path = cwd_dir + jpg_subdir_path
-	#print("del_xml jpg_dir_path:",jpg_dir_path)
 	
 	xmllistdir = os.listdir(xml_dir_path)
 	for path_name in xmllistdir:
-		#if path_name.endswith('txt'):
-			#filefullpath = os.path.join(xml_dir_path, file_name)
 		paths.append(path_name)
   		
 	totalnum_files = len(paths)
-	print("del_xml totalnum_files:",totalnum_files)
+	print("delxmlsyn2img totalnum_files:",totalnum_files)
 	
 	for i in range(totalnum_files):
 		filename = paths[i].split('.')[0]
 		pulljpgpath= jpg_dir_path + filename + jpg_suffix
-		#print("\ndel_xml \npulljpgpath:",pulljpgpath)
 		if not checkIsExist(pulljpgpath):
 			#print("del_xml file is not exist,need to delete!")
 			pullxmlpath = xml_dir_path + filename + xml_suffix
-			#print("del_xml \npullxmlpath:",pullxmlpath)
-			DelFile(pullxmlpath)
+			if checkIsExist(pullxmlpath):
+				DelFile(pullxmlpath)
 
-
-from PIL import Image
-def del_allnotjpg():
+def delimgsyn2xml(jpg_subdir_path,xml_subdir_path):
+	jpg_suffix = ".jpg"
+	xml_suffix = ".xml"
+	paths=[]
 	cwd_dir = os.getcwd()
+	xml_dir_path = cwd_dir + xml_subdir_path
 	jpg_dir_path = cwd_dir + jpg_subdir_path
+	
 	jpglistdir = os.listdir(jpg_dir_path)
-	for filename in jpglistdir:
-			path_name=jpg_dir_path+filename
+	for path_name in jpglistdir:
+		paths.append(path_name)
+  		
+	totalnum_files = len(paths)
+	print("delimgsyn2xml totalnum_files:",totalnum_files)
+	
+	for i in range(totalnum_files):
+		filename = paths[i].split('.')[0]
+		pullxmlpath= xml_dir_path + filename + xml_suffix
+		#print("delimgsyn2xml \npullxmlpath:",pullxmlpath)
+		if not checkIsExist(pullxmlpath):
+			print("delimgsyn2xml file is not exist,need to delete!")
+			pulljpgpath = jpg_dir_path + filename + jpg_suffix
+			print("delimgsyn2xml \npulljpgpath:",pulljpgpath)
+			DelFile(pulljpgpath)
+
+
+def del_allnotjpg(subname):
+	from PIL import Image	
+	cwd_dir = os.getcwd()
+	xml_dir_path = cwd_dir + subname
+	xmllistdir = os.listdir(xml_dir_path)
+	for filename in xmllistdir:
+			path_name=xml_dir_path+filename
+			#print("del_allnotjpg path_name:",path_name)
 			img = Image.open(path_name)
 			if img.format != 'JPEG':
 					print("del_allnotjpg img.format:",img.format)
@@ -67,11 +84,10 @@ def del_allnotjpg():
 					DelFile(path_name)
 		
 def main():
-	print("main start del_allnotjpg")
-	del_allnotjpg()
-	print("main start del_xml")
-	del_xml()	
-	print("main Finished!!!")	
+	delxmlsyn2img("\\annotations\\xml\\","\\images\\")
+	#delimgsyn2xml("\\images\\","\\annotations\\xml\\")
+	#del_allnotjpg("\\images\\")
+	print("main del_xml Finished!!!")	
 
 if __name__ == "__main__":
 	main()

@@ -49,18 +49,19 @@ print(__doc__)
 '''
 
 
-xml_subdir_path = "\\annotations\\xmls\\"
+xml_path ="\\annotations\\xml\\"
+img_path ="\\images\\"
   
-def count_eachtype_num():
-	gsum=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+def count_eachtype_num(subdirpath):
+	gsum=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 	curdir = os.getcwd()
-	countnum_dir =curdir + xml_subdir_path
+	countnum_dir =curdir + subdirpath
 	print("count_eachtype_num countnum_dir:",countnum_dir)	
 	filenames=os.listdir(countnum_dir)
 	#txt_filename= filenames[0].split('.')[0].split('_')[0]+'.txt'
 
 	for filename in filenames:
-		print("filename:",filename)
+		#print("filename:",filename)
 		if 'Overcoat' in filename:
 			gsum[1]=gsum[1]+1
 		elif 'Coat' in filename:
@@ -72,7 +73,6 @@ def count_eachtype_num():
 		elif 'Fleece' in filename:
 			gsum[5]=gsum[5]+1
 		elif 'Tshirt' in filename:
-			print("Tshirt:")
 			gsum[6]=gsum[6]+1
 		elif 'Suitpants' in filename:
 			gsum[7]=gsum[7]+1
@@ -107,7 +107,6 @@ def count_eachtype_num():
 		elif 'Handbag' in filename:
 			gsum[22]=gsum[22]+1	
 		elif 'Clutch' in filename:
-			print("Clutch:")
 			gsum[23]=gsum[23]+1
 		elif 'Wallet' in filename:
 			gsum[24]=gsum[24]+1	
@@ -137,8 +136,10 @@ def count_eachtype_num():
 			gsum[36]=gsum[36]+1	
 		elif 'Bracelet' in filename:
 			gsum[37]=gsum[37]+1
+		elif 'Other' in filename:
+			gsum[38]=gsum[38]+1			
 
-	for i in range(38):
+	for i in range(39):
 		gsum[0]=gsum[0]+gsum[i]
 	
 	print("\nOvercoat_UpperWear gsum[1]:",gsum[1])
@@ -186,12 +187,14 @@ def count_eachtype_num():
 	print("Bangle_Jewelry gsum[36]:",gsum[36])		
 	print("Bracelet_Jewelry gsum[37]:",gsum[37])
 
+	print("\nOthers gsum[38]:",gsum[38])
+	
 	print("\nTotal sum: gsum[0]:",gsum[0])
 
 
 def main():
-	count_eachtype_num()
-	
+	count_eachtype_num(xml_path)
+	count_eachtype_num(img_path)
 
 if __name__ == "__main__":
 	main()
